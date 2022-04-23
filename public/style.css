@@ -1,0 +1,86 @@
+/* 
+this is the style sheet for the food info panel.
+it wil have a login form, and a list of food items.
+*/
+
+body {
+    background-color: #f2f2f2;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.login-field {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    resize: vertical;
+}
+
+.login-field > button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.login-field > button:hover {
+    background-color: #45a049;
+}
+
+.login-field > button:disabled {
+    background-color: #ccc;
+}
+
+.login-field > button:focus {
+    outline: none;
+}
+
+.login-field > input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.login-field > input:disabled {
+    background-color: #ccc;
+}
+
+.login-field > input:focus {
+    outline: none;
+}
+
+/* item cards */
+.item-list {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    resize: vertical;
+}
+
+.item {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    resize: vertical;
+}
+
+.item > .item-name {
+    font-weight: bold;
+}
+
+/*small text*/
+.item > .item-size {
+    font-size: 12px;
+}

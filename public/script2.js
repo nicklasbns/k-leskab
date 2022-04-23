@@ -10,35 +10,14 @@ window.onload = async () => {
     var username = document.getElementById("username");
     var loginButton = document.getElementById("login");
     var createAccount = document.getElementById("createAccount");
+    var itemSize = document.getElementById("item-size");
+    var addItem = document.getElementById("add-item");
     loginButton.addEventListener("click", login);
     createAccount.addEventListener("click", signup);
+    addItem.addEventListener("click", newItem);
     //when i click enter on password
-    password.addEventListener("keyup", async (event) => {
-        //if enter key is pressed
-        if (event.key == "ENTER" && password.value !== "" && username.value !== "") {
-            //send password to server
-            socket.emit("login", username.value, hash(password.value), (res) => {
-                if (res) {
-                    //if password is correct
-                    //send username to server
-                    socket.emit("getItems", (res) => {
-                        //if username is correct
-                        //send items to client
-                        var items = JSON.parse(res);
-                        var list = document.getElementById("list");
-                        items.forEach((e) => {
-                            var li = document.createElement("li");
-                            li.innerHTML = e.item + " " + e.size;
-                            list.appendChild(li);
-                        });
-                    });
-                }
-            });
-            //clear password
-            password.value = "";
-            username.value = "";
-        }
-    });
+    password.addEventListener("keyup", (event) => (event.key == "Enter") && login());
+    itemSize.addEventListener("keyup", (event) => (event.key == "Enter") && newItem());
 
 };
 
@@ -51,16 +30,54 @@ socket.on("update", (data) => {
     console.log(JSON.stringify(data));
 });
 
-function update(username) {
+function update() {
     socket.emit("getItems", (res) => {
         var items = JSON.parse(res);
         var list = document.getElementById("list");
+        list.innerHTML = "";
         items.forEach((e) => {
-            var li = document.createElement("li");
-            li.innerHTML = e.item + " " + e.size;
+            var li = document.createElement("div");
+            li.className = "item";
+            li.innerHTML = 
+`<div class="item-name">${e.name}</div>
+<div class="item-size">${e.size}</div>`;
             list.appendChild(li);
         });
     });
+}
+
+
+/* this is the code that recieves the data from the client:
+    socket.on("add", (data: string) => {
+        if (socket.user?.loggedIn) {
+            console.log(data);
+            var item: item = JSON.parse(data);
+            database.push("/accounts/" + socket.user.name + "[]", {item: item.item, size: item.size});
+            socket.emit("update", JSON.stringify(database.getData("/accounts/" + socket.user.name)));
+        }
+    });
+this fucntion sends data to the server: */
+function newItem() {
+    var item = document.getElementById("item-name");
+    var size = document.getElementById("item-size");
+    var list = document.getElementById("list");
+    if (item.value !== "" && size.value !== "") {
+        socket.emit("add", JSON.stringify({item: item.value, size: size.value}), (res) => {
+            if (res) {
+                var li = document.createElement("div");
+                li.className = "item";
+                li.innerHTML = 
+`<div class="item-name">${item.value}</div>
+<div class="item-size">${size.value}</div>`;
+                list.appendChild(li);
+                alert("Item added");
+            } else {
+                alert("error");
+            }
+            item.value = "";
+            size.value = "";
+        });
+    }
 }
 
 function login() {
@@ -70,7 +87,7 @@ function login() {
     if (password.value !== "" && username.value !== "") {
         socket.emit("login", username.value, hash(password.value), (res) => {
             if (res) {
-                update(username.value);
+                update();
                 header.innerText = "Welcome " + username.value;
                 username.value = "";
             } else {
@@ -88,7 +105,7 @@ function signup() {
     if (password.value !== "" && username.value !== "") {
         socket.emit("signup", username.value, hash(password.value), (res) => {
             if (res) {
-                update(username.value);
+                update();
                 header.innerText = "Welcome " + username.value;
                 username.value = "";
             } else {

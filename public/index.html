@@ -7,15 +7,46 @@
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
     <script src="/script2.js"></script>
+    <link rel="stylesheet" href="/style.css">
     <title>Document</title>
 </head>
 <body>
     <text id="header">asdasdas</text>
     <button>button</button>
-    <!--username--><br>
-    <input type="text" id="username" placeholder="username"><br>
-    <input type="password" id="password" placeholder="password"><br>
-    <button id="login">login</button>
-    <button id="createAccount">create account</button><br>
+    <!--flexbox with two divs-->
+    <div class="flex-container" >
+        <div class="flex-item login-field" style="display: inline-block; vertical-align: top;">
+            <a>1</a>
+            <!--login system--><br>
+            <input type="text" id="username" placeholder="username"><br>
+            <input type="password" id="password" placeholder="password"><br>
+            <button id="login">login</button>
+            <button id="createAccount">create account</button><br>
+        </div>
+        <div class="flex-item" style="display: inline-block; vertical-align: top;">
+            <a>2</a>
+            <!--example of item structure: {
+                "item": "item name",
+                "size": "5 grams"
+            }-->
+            <!--list of items-->
+            <div id="list" class="item-list">
+                <div class="item">
+                    <div class="item-name">item name</div>
+                    <div class="item-size">5 grams</div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-item" style="display: inline-block; vertical-align: top;">
+            <a>3</a><br>
+            <!--Form for adding food items-->
+            <input type="text" id="item-name" placeholder="item name"><br>
+            <input type="text" id="item-size" placeholder="item size"><br>
+            <button id="add-item">add item</button>
+        </div>
+    </div>
+    
+    
+
 </body>
 </html>

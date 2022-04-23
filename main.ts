@@ -46,7 +46,7 @@ io.on("connection", (socket: userSocket) => {
         res(createUser(username, password));
     });
 
-    socket.on("login", (username: string, hash: string, res) => {
+    socket.on("login", (username: string, hash: string, res: (res: string|boolean) => void) => {
         try {
             database.getData("/accounts/" + username);
             if (database.getData("/accounts/" + username).password === hash) {
@@ -69,12 +69,14 @@ io.on("connection", (socket: userSocket) => {
         socket.user = {loggedIn: false};
     });
 
-    socket.on("add", (data: string) => {
+    socket.on("add", (data: string, res: (res: boolean) => void) => {
         if (socket.user?.loggedIn) {
             console.log(data);
             var item: item = JSON.parse(data);
-            database.push("/accounts/" + socket.user.name + "[]", {item: item.item, size: item.size});
-            socket.emit("update", JSON.stringify(database.getData("/accounts/" + socket.user.name)));
+            database.push("/accounts/" + socket.user.name + "/items[]", {item: item.item, size: item.size});
+            res(true);
+        } else {
+            res(false);
         }
     });
 
