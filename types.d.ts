@@ -19,5 +19,6 @@ export interface userSocket extends Socket {
 
 export interface item {
     item: string,
-    size?: string
+    size?: string,
+    image?: string
 }

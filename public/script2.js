@@ -12,9 +12,11 @@ window.onload = async () => {
     var createAccount = document.getElementById("createAccount");
     var itemSize = document.getElementById("item-size");
     var addItem = document.getElementById("add-item");
+    var refresh = document.getElementById("refresh-button");
     loginButton.addEventListener("click", login);
     createAccount.addEventListener("click", signup);
     addItem.addEventListener("click", newItem);
+    refresh.addEventListener("click", update);
     //when i click enter on password
     password.addEventListener("keyup", (event) => (event.key == "Enter") && login());
     itemSize.addEventListener("keyup", (event) => (event.key == "Enter") && newItem());
@@ -32,14 +34,15 @@ socket.on("update", (data) => {
 
 function update() {
     socket.emit("getItems", (res) => {
-        var items = JSON.parse(res);
+        var items = JSON.parse(res);//this is {item: item, size: size, image: image}
         var list = document.getElementById("list");
         list.innerHTML = "";
         items.forEach((e) => {
             var li = document.createElement("div");
             li.className = "item";
             li.innerHTML = 
-`<div class="item-name">${e.name}</div>
+`<img src="${e.image}" alt="${e.item}" class="small-image">
+<div class="item-name">${e.item}</div>
 <div class="item-size">${e.size}</div>`;
             list.appendChild(li);
         });

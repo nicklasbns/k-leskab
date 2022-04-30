@@ -6,6 +6,7 @@ import {Server} from "socket.io";
 import {JsonDB as jsondb} from "node-json-db";
 import {hash, pubKey} from "./functions";
 import express from "express";
+import {getImage} from "./googleimages";
 // send everything in "public", "dist/prublic" and send "node_modules\jssha\dist\sha.js" as "sha.js"
 const server = express().use(express.static("public")).use(express.static("dist/public"));
 var io = new Server(http.createServer(server).listen(80));
@@ -69,20 +70,22 @@ io.on("connection", (socket: userSocket) => {
         socket.user = {loggedIn: false};
     });
 
-    socket.on("add", (data: string, res: (res: boolean) => void) => {
+    socket.on("add", async (data: string, res: (res: boolean) => void) => {
         if (socket.user?.loggedIn) {
             console.log(data);
             var item: item = JSON.parse(data);
-            database.push("/accounts/" + socket.user.name + "/items[]", {item: item.item, size: item.size});
+            database.push("/accounts/" + socket.user.name + "/items[]", {item: item.item, size: item.size, image: await getImage(item.item)});
             res(true);
         } else {
             res(false);
         }
     });
 
-    socket.on("getItems", (res) => {
+    socket.on("getItems", (res: (res: string) => void) => {
         if (socket.user?.loggedIn) {
-            res(JSON.stringify(database.getData("/accounts/"+socket.user.name)));
+            res(JSON.stringify(database.getData("/accounts/"+socket.user.name).items)); //TODO: this is unsafe
+        } else {
+            res("");
         }
     });
 

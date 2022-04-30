@@ -84,3 +84,8 @@ body {
 .item > .item-size {
     font-size: 12px;
 }
+
+.item > .small-image {
+    max-width: 50px;
+    max-height: 50px;
+}
