@@ -33,3 +33,7 @@ export function sign(data: string): string {
 export function verify(data: string, signature: string): boolean {
     return crypto.verify("sha256", Buffer.from(data), publicKey, Buffer.from(signature, "base64"));
 }
+
+export function createSession() {
+    return crypto.randomBytes(32).toString("hex");
+}

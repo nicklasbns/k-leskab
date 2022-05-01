@@ -21,6 +21,19 @@ window.onload = async () => {
     password.addEventListener("keyup", (event) => (event.key == "Enter") && login());
     itemSize.addEventListener("keyup", (event) => (event.key == "Enter") && newItem());
 
+    if (localStorage.getItem("session")) {
+        socket.emit("session", localStorage.getItem("session"), res => {
+            if (res) {
+                update();
+                var header = document.getElementById("header");
+                header.innerText = "Welcome " + res;
+                console.log("loaded session");
+            } else {
+                localStorage.removeItem("session");
+                console.log("session expired");
+            }
+        });
+    }
 };
 
 
@@ -38,15 +51,20 @@ function update() {
         var list = document.getElementById("list");
         list.innerHTML = "";
         items.forEach((e) => {
-            var li = document.createElement("div");
-            li.className = "item";
-            li.innerHTML = 
-`<img src="${e.image}" alt="${e.item}" class="small-image">
-<div class="item-name">${e.item}</div>
-<div class="item-size">${e.size}</div>`;
-            list.appendChild(li);
+            list.insertBefore(itemElement(e), list.firstChild);
         });
     });
+}
+
+function itemElement(item) {
+    var li = document.createElement("div");
+    li.className = "item";
+    li.innerHTML = 
+`<img src="${item.image}" alt="${item.item}" class="small-image">
+<div class="item-name">${item.item}</div>
+<div class="item-size">${item.size}</div>
+<div class="item-date">${item.date}</div>`; //todo add delete functionality
+    return li;
 }
 
 
@@ -65,15 +83,11 @@ function newItem() {
     var size = document.getElementById("item-size");
     var list = document.getElementById("list");
     if (item.value !== "" && size.value !== "") {
-        socket.emit("add", JSON.stringify({item: item.value, size: size.value}), (res) => {
+        var date = new Date();
+        socket.emit("add", JSON.stringify({item: item.value, size: size.value, date}), (res) => {
             if (res) {
-                var li = document.createElement("div");
-                li.className = "item";
-                li.innerHTML = 
-`<div class="item-name">${item.value}</div>
-<div class="item-size">${size.value}</div>`;
-                list.appendChild(li);
-                alert("Item added");
+                list.insertBefore(itemElement(res), list.firstChild);
+                alert("Item added"); //todo fix this
             } else {
                 alert("error");
             }
@@ -90,9 +104,12 @@ function login() {
     if (password.value !== "" && username.value !== "") {
         socket.emit("login", username.value, hash(password.value), (res) => {
             if (res) {
+                var [username, session] = res.split(":");
+                localStorage.setItem("session", session);
                 update();
-                header.innerText = "Welcome " + username.value;
+                header.innerText = "Welcome " + username;
                 username.value = "";
+                console.log("logged in");
             } else {
                 header.innerText = "Incorrect username or password";
             }

@@ -6,6 +6,7 @@ it wil have a login form, and a list of food items.
 body {
     background-color: #f2f2f2;
     font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
 }
 
 .login-field {
@@ -14,7 +15,6 @@ body {
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 16px;
-    resize: vertical;
 }
 
 .login-field > button {
@@ -58,12 +58,13 @@ body {
 
 /* item cards */
 .item-list {
+    max-height: 90vh;
+    overflow-y: scroll;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 16px;
-    resize: vertical;
 }
 
 .item {
@@ -73,7 +74,6 @@ body {
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 16px;
-    resize: vertical;
 }
 
 .item > .item-name {
