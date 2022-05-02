@@ -85,7 +85,17 @@ body {
     font-size: 12px;
 }
 
+.item > .item-date {
+    color : rgb(104, 104, 104);
+    text-decoration: underline;
+    font-size: 12px;
+}
+
 .item > .small-image {
     max-width: 50px;
     max-height: 50px;
+}
+
+.hidden {
+    display: none;
 }

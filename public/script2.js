@@ -10,11 +10,13 @@ window.onload = async () => {
     var username = document.getElementById("username");
     var loginButton = document.getElementById("login");
     var createAccount = document.getElementById("createAccount");
+    var logoutButton = document.getElementById("logout");
     var itemSize = document.getElementById("item-size");
     var addItem = document.getElementById("add-item");
     var refresh = document.getElementById("refresh-button");
     loginButton.addEventListener("click", login);
     createAccount.addEventListener("click", signup);
+    logoutButton.addEventListener("click", logout);
     addItem.addEventListener("click", newItem);
     refresh.addEventListener("click", update);
     //when i click enter on password
@@ -27,6 +29,7 @@ window.onload = async () => {
                 update();
                 var header = document.getElementById("header");
                 header.innerText = "Welcome " + res;
+                hideButtons(true);
                 console.log("loaded session");
             } else {
                 localStorage.removeItem("session");
@@ -63,7 +66,7 @@ function itemElement(item) {
 `<img src="${item.image}" alt="${item.item}" class="small-image">
 <div class="item-name">${item.item}</div>
 <div class="item-size">${item.size}</div>
-<div class="item-date">${item.date}</div>`; //todo add delete functionality
+<div class="item-date">${new Date(item.date).toLocaleDateString()}</div>`; //todo add delete functionality
     return li;
 }
 
@@ -83,7 +86,7 @@ function newItem() {
     var size = document.getElementById("item-size");
     var list = document.getElementById("list");
     if (item.value !== "" && size.value !== "") {
-        var date = new Date();
+        var date = Date.now();
         socket.emit("add", JSON.stringify({item: item.value, size: size.value, date}), (res) => {
             if (res) {
                 list.insertBefore(itemElement(res), list.firstChild);
@@ -109,6 +112,7 @@ function login() {
                 update();
                 header.innerText = "Welcome " + username;
                 username.value = "";
+                hideButtons(true);
                 console.log("logged in");
             } else {
                 header.innerText = "Incorrect username or password";
@@ -128,6 +132,7 @@ function signup() {
                 update();
                 header.innerText = "Welcome " + username.value;
                 username.value = "";
+                hideButtons(true);
             } else {
                 header.innerText = "Username already exists";
             }
@@ -136,10 +141,33 @@ function signup() {
     }
 }
 
+function logout() {
+    localStorage.removeItem("session");
+    update();
+    var header = document.getElementById("header");
+    header.innerText = "Please log in";
+    hideButtons(false);
+}
+
 
 //make a hash from password using jssha512
 function hash(password) {
     var shaObj = new jsSHA("SHA-512", "TEXT");
     shaObj.update(password);
     return shaObj.getHash("HEX");
+}
+
+function hideButtons(inout) {
+    var login = document.getElementById("login");
+    var createAccount = document.getElementById("createAccount");
+    var logoutButton = document.getElementById("logout");
+    if (inout) {
+        login.classList.add("hidden");
+        createAccount.classList.add("hidden");
+        logoutButton.classList.remove("hidden");
+    } else {
+        login.classList.remove("hidden");
+        createAccount.classList.remove("hidden");
+        logoutButton.classList.add("hidden");
+    }
 }

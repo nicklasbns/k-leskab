@@ -54,13 +54,14 @@ io.on("connection", (socket: userSocket) => {
             username = username.replace(/[^a-zA-Z0-9]/g, "");
             database.getData("/accounts/" + username);
             if (database.getData("/accounts/" + username).password === hash) {
+                var session = createSession();
                 socket.user = {
                     loggedIn: true,
                     id: "not yet implemented",
                     name: username,
-                    isAdmin: database.getData("/accounts/" + username).isAdmin
+                    isAdmin: database.getData("/accounts/" + username).isAdmin,
+                    session: session
                 };
-                var session = createSession();
                 database.push("/sessions[]", {
                     user: username,
                     session: session,
@@ -88,7 +89,8 @@ io.on("connection", (socket: userSocket) => {
                 loggedIn: true,
                 id: "not yet implemented",
                 name: sessionObject.user,
-                isAdmin: database.getData("/accounts/" + sessionObject.user).isAdmin
+                isAdmin: database.getData("/accounts/" + sessionObject.user).isAdmin,
+                session: sessionObject.session
             };
             res(sessionObject.user);
         } else {
@@ -98,6 +100,12 @@ io.on("connection", (socket: userSocket) => {
 
 
     socket.on("logout", () => {
+        var sessions = database.getData("/sessions");
+        sessions.forEach((e: {user: string, session: string, date: number}, i: number) => {
+            if (e.session == socket.user?.session) {
+                database.delete("/sessions/[" + i + "]");
+            }
+        });
         socket.user = {loggedIn: false};
     });
 
@@ -106,7 +114,7 @@ io.on("connection", (socket: userSocket) => {
             console.log(data);
             var item: item = JSON.parse(data);
             database.push("/accounts/" + socket.user.name + "/items[]", {item: item.item, size: item.size, image: await getImage(item.item), date: item.date});
-            res({item: item.item, size: item.size, image: await getImage(item.item)});
+            res({item: item.item, size: item.size, image: await getImage(item.item), date: item.date});
         } else {
             res(false);
         }
@@ -116,7 +124,7 @@ io.on("connection", (socket: userSocket) => {
         if (socket.user?.loggedIn) {
             res(JSON.stringify(database.getData("/accounts/"+socket.user.name).items)); //TODO: this is unsafe
         } else {
-            res("");
+            res('[{"item": "item Name", "size": "", "image": "", "date": ""}]');
         }
     });
 

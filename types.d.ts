@@ -13,7 +13,8 @@ export interface userSocket extends Socket {
         loggedIn: boolean,
         id?: string,
         name?: string,
-        isAdmin?: boolean
+        isAdmin?: boolean,
+        session?: string
     };
 }
 
