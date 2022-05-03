@@ -23,3 +23,11 @@ client
 ---
 
 - updateItems
+
+
+toadd:
+
+- sizes
+- use counter
+- create the køleskab client
+
