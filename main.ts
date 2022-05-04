@@ -112,9 +112,19 @@ io.on("connection", (socket: userSocket) => {
     socket.on("add", async (data: string, res: (res: boolean|object) => void) => {
         if (socket.user?.loggedIn) {
             console.log(data);
-            var item: item = JSON.parse(data);
-            database.push("/accounts/" + socket.user.name + "/items[]", {item: item.item, size: item.size, image: await getImage(item.item), date: item.date});
-            res({item: item.item, size: item.size, image: await getImage(item.item), date: item.date});
+            var recieved: item = JSON.parse(data);
+            var item: item = {
+                item: recieved.item, 
+                size: recieved.size, 
+                image: await getImage(recieved.item), 
+                date: recieved.date, 
+                id: crypto.randomUUID(), 
+                uses: 0, 
+                barcode: recieved.barcode || "", 
+                expirationPeriod: recieved.expirationPeriod || 0
+            }
+            database.push("/accounts/" + socket.user.name + "/items[]", item);
+            res(item);
         } else {
             res(false);
         }
@@ -127,6 +137,8 @@ io.on("connection", (socket: userSocket) => {
             res('[{"item": "item Name", "size": "", "image": "", "date": ""}]');
         }
     });
+
+    //socket.on("addUse", (item: string))
 
 });
 

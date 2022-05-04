@@ -82,12 +82,18 @@ function itemElement(item) {
     });
 this fucntion sends data to the server: */
 function newItem() {
-    var item = document.getElementById("item-name");
+    var name = document.getElementById("item-name");
     var size = document.getElementById("item-size");
     var list = document.getElementById("list");
     if (item.value !== "" && size.value !== "") {
         var date = Date.now();
-        socket.emit("add", JSON.stringify({item: item.value, size: size.value, date}), (res) => {
+        var item = {
+            item: name,
+            size: size,
+            barcode: recieved.barcode || "",
+            expirationPeriod: recieved.expirationPeriod || 0
+        }
+        socket.emit("add", JSON.stringify({item: item.name, size: size.value, date}), (res) => {
             if (res) {
                 list.insertBefore(itemElement(res), list.firstChild);
                 alert("Item added"); //todo fix this

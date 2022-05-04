@@ -22,5 +22,9 @@ export interface item {
     item: string,
     size?: string,
     image?: string,
-    date: date
+    date: date,
+    id: string,
+    uses: number,
+    barcode: string,
+    expirationPeriod?: number
 }

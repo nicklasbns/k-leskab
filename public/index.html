@@ -42,8 +42,14 @@
         <div class="flex-item" style="display: inline-block; vertical-align: top;">
             <a>3</a><br>
             <!--Form for adding food items-->
+            <label>Choose a browser from this list:
+            <input type="text" list="barcodes" placeholder="barcode"/></label>
+            <datalist id="barcodes">
+                <option value="">
+            </datalist><br>
             <input type="text" id="item-name" placeholder="item name"><br>
             <input type="text" id="item-size" placeholder="item size"><br>
+            <input type="text" id="item-expirationPeriod" placeholder="expiration period"><br>
             <button id="add-item">add item</button>
         </div>
     </div>
