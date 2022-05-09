@@ -85,13 +85,13 @@ function newItem() {
     var name = document.getElementById("item-name");
     var size = document.getElementById("item-size");
     var list = document.getElementById("list");
-    if (item.value !== "" && size.value !== "") {
-        var date = Date.now();
+    if (name.value !== "" && size.value !== "") {
+        var date = new Date();
         var item = {
-            item: name,
-            size: size,
-            barcode: recieved.barcode || "",
-            expirationPeriod: recieved.expirationPeriod || 0
+            name: name.value,
+            size: size.value,
+            // barcode: recieved.barcode || "",
+            // expirationPeriod: recieved.expirationPeriod || 0
         }
         socket.emit("add", JSON.stringify({item: item.name, size: size.value, date}), (res) => {
             if (res) {
@@ -153,6 +153,8 @@ function logout() {
     var header = document.getElementById("header");
     header.innerText = "Please log in";
     hideButtons(false);
+    var list = document.getElementById("list");
+    list.innerHTML = "";
 }
 
 

@@ -11,6 +11,10 @@ const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
     modulusLength: 2048,
 });
 
+export function randomUUID(): string {
+    return crypto.randomUUID();
+}
+
 export function encrypt(data: string): string {
     const encrypted = crypto.publicEncrypt(publicKey, Buffer.from(data));
     return encrypted.toString("base64");

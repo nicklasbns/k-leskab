@@ -8,7 +8,6 @@ list of global endpoints
 
 - login
 - logout
-- userStatus
 
 list of user endpoints
 
@@ -24,8 +23,15 @@ client
 
 - updateItems
 
-toadd:
+items
+---
 
-- sizes
-- use counter
-- create the køleskab client
+    []: # name
+    []: # size
+    []: # image
+    []: # date
+    []: # id
+    []: # uses
+    []: # barcode
+    []: # expirationPeriod
+

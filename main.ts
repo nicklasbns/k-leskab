@@ -118,7 +118,7 @@ io.on("connection", (socket: userSocket) => {
                 size: recieved.size, 
                 image: await getImage(recieved.item), 
                 date: recieved.date, 
-                id: crypto.randomUUID(), 
+                id: "", 
                 uses: 0, 
                 barcode: recieved.barcode || "", 
                 expirationPeriod: recieved.expirationPeriod || 0
